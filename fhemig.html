@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- RESET CSS -->
+    <link rel="stylesheet" href="reset.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="media_queries.css">
+
+    <!-- Fonte awesome -->
+    <script src="https://kit.fontawesome.com/71ad9733af.js" crossorigin="anonymous"></script>
+
+
+
+    <script>
+        var largura = window.innerWidth
+        var altura = window.innerHeight
+
+        console.log(largura + ' ' + altura)
+    </script>
+
+    <link rel="shortcut icon" href="src/icons/icon (4).png" type="image/x-icon">
+    <title>Assessoria de Tecnologia da Informação (SES)</title>
+</head>
+<!-- a -->
+
+<body class="bg-light">
+
+    TENTAR ATUALIZAR O Bootstrap PARA A VERSÃO 5.2
+
+    <!-- INICIO CABEÇALHO -->
+    <header>
+        <nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top">
+
+            <!-- INICIO CONTAINER -->
+            <div class="container">
+                <a class="navbar-brand p-3 pb-4" href="index.html">
+                    <h1 class="fw-light fs-1 h1-header">Assessoria de Tecnologia da informação (SES)</h1>
+                    <!-- <img class="logo-header" src="src/icons/icon (1).png" alt="logo"> -->
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav-principal">
+                    <i class="fa-solid fa-bars text-white"></i>
+                </button>
+
+                <div class="collapse navbar-collapse" id="nav-principal">
+                    <ul class="navbar-nav ms-auto mb-2 fw-light menu">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="index.html">Pagina Inicial</a>
+                        </li>
+
+                        <li class="nav-item divisor"></li>
+
+                        <!-- <li class="nav-item">
+                            <a class="nav-link" href="#">Comunicados</a>
+                        </li> -->
+
+                        <li class="nav-item divisor"></li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Fale conosco</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- FIM CABEÇALHO -->
+
+    <!-- DIV ESPAÇAMENTO -->
+    <div class="p-5">
+        <p class="d-none">spacing</p>
+    </div>
+
+    <!-- INICIO GUIA VPN -->
+    <section class="container p-5 mt-5 bg-white rounded-3">
+        <div class="row">
+            <h2 class="p-2 mt-2 display-5 text-center">Sistema Reserva de Estações Co-Working FHEMIG</h2>
+            <div class="col-md-12 mt-3">
+                <h3 class="lead fw-normal fs-4">Em quais casos se vê necessario o Co-working Fhemig?</h3>
+                <p class="lead mt-4 ">
+                    Com o fechamento do prédio da cidade administrativa temos a possibilidade de trabalhar
+                    presencialmente no prédio da Fhemig. Porém quem precisar trabalhar nas estações alocadas na Fhemig
+                    terá de fazer reservas pelo nosso sistema de reservas.
+                </p>
+
+                <p class="lead mt-4 p-3 rounded-1 bg-light text-danger">
+                    Em resumo, essas informações só se faz necessaria caso haja impossibilidade de utilizar o espaço
+                    presente no predio da CAMG.
+                </p>
+
+                <p class="fs-5 fw-bolder text-danger mt-4">
+                    Para realizar a reserva basta seguir o passo a passo do manual abaixo:
+                </p>
+
+                <!-- LINKS MANUAIS  -->
+                <div class="row">
+                    <div class="col-md-12 d-flex">
+                        <div class="p-4 d-flex justify-content-between align-items-center">
+                            <img src="src/icons/word-icon.png" class="img-fluid">
+                            <a href="https://saudemg.sharepoint.com/:x:/r/sites/ATI/_layouts/15/Doc.aspx?sourcedoc=%7B37747BAF-7D05-436E-8D67-0A57803A969C%7D&file=Planilha_Solicita%C3%A7%C3%A3o_de_acesso_VPN.xlsx&action=default&mobileredirect=true"
+                                class="text-decoration-none" target="_blank">
+                                <button type="button" class="btn btn-outline-primary fs-7 ms-2">
+                                    Manual reserva Co-Working FHEMIG
+                                </button>
+                            </a>
+                            <!-- <i class="fa-solid fa-chevron-right ms-5 text-danger"></i> -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FIM INICIO GUIA DE SOLUÇÕES RAPIDAS - SUPORTES SES  -->
+
+    <!-- INICIO FOOTER -->
+    <footer class="mt-5 bg-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="fs-5 fw-light text-dark p-4 m-3 text-center ">Central de Comunicados - Assessoria de
+                        Tecnologia da Informação (Nucleo de Infraestrutura e Suporte de TIC) ©.</h4>
+                </div>
+            </div>
+
+        </div>
+
+    </footer>
+
+    <!-- FIM FOOTER -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
