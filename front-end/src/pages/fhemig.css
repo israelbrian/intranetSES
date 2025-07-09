@@ -1,0 +1,19 @@
+.row div img.icon-word {
+    width: 2.5rem;
+    cursor: pointer;
+}
+
+.img_error_outlook {
+    max-width: 28rem;
+    width: 100%;
+    cursor: pointer;
+    transition: .25s ease-in;
+}
+
+.img_error_outlook:hover {
+    transform: scale(1.09);
+    margin: 1.9rem 0;
+    object-fit: cover;
+    object-position: center;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 10px 50px -12px;
+}

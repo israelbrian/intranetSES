@@ -1,0 +1,82 @@
+.logo-header {
+    width: 60px;
+}
+
+/* 
+.menu .nav-item .nav-link:hover {
+    color: #fdfb7d;
+
+} */
+.bg-white {
+    background: #fff;
+}
+
+.img-1 {
+    width: 600px;
+    height: 400px;
+    border-radius: 5px;
+    transition: .5s;
+}
+
+.section-duvidas h3 {
+    color: #000;
+}
+
+/* a:hover .link-content h3 {
+    color: #ccc;
+} */
+
+a:hover .link-content {
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+img {
+    max-width: 580px;
+    transition: all .18s ease;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+a:hover img {
+    width: 580px;
+    border-radius: 12px;
+}
+
+/* footer {
+    background: #0d6efd;
+
+} */
+
+section h1:first-child {
+    position: relative;
+}
+
+section h1:first-child::before {
+    position: absolute;
+    width: 0%;
+    height: 3px;
+    content: '';
+    background: rgb(44, 124, 245);
+    border-radius: 10px;
+    bottom: 5%;
+    left: 15%;
+    margin: .55rem auto;
+}
+
+.loading {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: #fff;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    pointer-events: none;
+    user-select: none;
+}
