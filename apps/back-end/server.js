@@ -109,13 +109,17 @@ try {
   // --- Rota para o envio de e-mail ---
   app.post(
     "/send-email",
-    upload.single([{ name: "file", maxCount: 3 }]), // deve ser "file" se for esse nome no front-end <input type="file" name="file" />
+    upload.array("file", 5), // deve ser "file" se for esse nome no front-end <input type="file" name="file" multiple /> // <--- ALTERADO AQUI: 'files' é o nome do campo no seu frontend, 5 é o limite de arquivos
     // nome deve coincidir
+    // Lembre-se: o nome do campo aqui ("file") DEVE coincidir com o atributo 'name' do seu input de arquivo no frontend.
     async (req, res) => {
       // Dados do formulário estão em req.body
       const { fullName, email, ddd, ramal, subject, message } = req.body;
-      const attachedFile = req.file; // Arquivo enviado via Multer
-
+      const attachedFiles = req.files; // Arquivos enviado via Multer
+      if (Array.isArray(attachedFiles)) {
+        attachedFiles.map((item) => console.log(item));
+      }
+      console.log(attachedFiles);
       // --- Validação de dados (REPETIR VALIDAÇÕES DO FRONTEND AQUI É CRÍTICO PARA SEGURANÇA) ---
       const validationErrors = {};
 
@@ -135,8 +139,15 @@ try {
 
       if (Object.keys(validationErrors).length > 0) {
         console.error("Erro de validação no backend:", validationErrors);
-        if (attachedFile && fs.existsSync(attachedFile.path)) {
-          fs.unlinkSync(attachedFile.path); // Remover arquivo temporário em caso de erro de validação
+        if (attachedFiles && fs.existsSync(attachedFiles.path)) {
+          if (attachedFiles.length > 0) {
+            attachedFiles.forEach((file) => {
+              if (fs.existsSync(file.path)) {
+                fs.unlinkSync(attachedFiles.path); // Remover arquivo temporário em caso de erro de validação
+              }
+            });
+          }
+          fs.unlinkSync(attachedFiles.path);
         }
         return res.status(400).json({
           message: "Dados do formulário inválidos.",
@@ -146,7 +157,7 @@ try {
 
       // --- Construção do corpo do e-mail ---
       const mailOptions = {
-        from: process.env.EMAIL_USER, // O remetente do e-mail (pode ser o seu e-mail do servidor)
+        from: email, // O remetente do e-mail (pode ser o seu e-mail do servidor)
         to: process.env.TARGET_EMAIL, // O e-mail setorial da SES
         replyTo: email, // Permite responder diretamente ao e-mail do remetente do formulário
         subject: `Contato TI SES - ${subject}`,
@@ -158,19 +169,53 @@ try {
       <p><strong>Assunto:</strong> ${subject}</p>
       <p><strong>Mensagem:</strong></p>
       <p>${message.replace(/\n/g, "<br>")}</p>
+      <hr>
+      <table style="font-family: Arial, sans-serif; font-size: 14px; line-height: 1.5; color: #333; width: 45%; height: auto; background: #ffffff; border-radius: 25px; padding: 20px; border: .5px solid #ddd;">
+        <tr>
+          <td style=width: 100%; height: 100%; line-height: 1.5>
+            <strong style="font-size: 16px; color: #0078D7;">${fullName}</strong><br>
+            <span style="color: #555;">Seu Cargo</span><br>
+            <span style="color: #555;">SECRETARIA DE ESTADO DE SAÚDE DE MINAS DE GERAIS</span><br>
+            <a href="mailto:${email}" style="color: #0078D7; text-decoration: none;">${email}</a><br>
+            <a href="tel:+55${ddd}${ramal}" style="color: #0078D7; text-decoration: none;">+55 (${ddd}) ${ramal}</a><br>
+            <span style="color: #555; font-size: 12px; font-style: italic;">MG Cidade Administrativa - Rodovia
+              Papa João Paulo II, 3777 - Serra Verde
+              Belo Horizonte, MG - CEP 31630903.</span>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding-top: 10px;">
+            <a href="https://www.saude.mg.gov.br/" style="margin-right: 10px;">
+              <img src="https://th.bing.com/th/id/OIP.wWimqECAVD5y34hl6Ouj7gHaC6?w=344&h=137&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" alt="logo_SES" width="250" style="vertical-align: middle; margin-top: 20px;">
+            </a>
+          </td>
+        </tr>
+      </table>
+      <p><strong>Anexos:</strong></p>
+      ${
+        attachedFiles && attachedFiles.length > 0
+          ? `<ul>${attachedFiles
+              .map(
+                (file) =>
+                  `<li>${file.originalname} (${(file.size / 1024).toFixed(
+                    2
+                  )} KB)</li>`
+              )
+              .join("")}</ul>`
+          : "<p>Nenhum arquivo anexado.</p>"
+      }
       <br>
       <small>Este e-mail foi enviado automaticamente pelo formulário de contato.</small>
     `,
       };
 
-      // Anexar arquivo se existir
-      if (attachedFile) {
-        mailOptions.attachments = [
-          {
-            filename: attachedFile.originalname,
-            path: attachedFile.path, // Caminho temporário do arquivo
-          },
-        ];
+      // Anexar arquivos se existir // <--- ALTERADO AQUI: Anexar múltiplos arquivos se existirem ---
+      // Anexar múltiplos arquivos se existirem
+      if (attachedFiles && attachedFiles.length > 0) {
+        mailOptions.attachments = attachedFiles.map((file) => ({
+          filename: file.originalname,
+          path: file.path, // Caminho temporário do arquivo
+        }));
       }
 
       try {
@@ -188,7 +233,9 @@ try {
           senderEmail: email,
           subject: subject,
           messageId: info.messageId,
-          fileName: attachedFile ? attachedFile.originalname : "N/A",
+          fileName: attachedFiles
+            ? attachedFiles.map((f) => f.originalname)
+            : ["N/A"], // <--- ALTERADO AQUI
         };
         console.log("LOG [SUCESSO]:", logEntry);
         // Em um sistema real, você salvaria isso em um banco de dados ou serviço de log externo.
@@ -219,16 +266,24 @@ try {
         });
       } finally {
         // Remover o arquivo temporário SEMPRE após o processamento (sucesso ou falha)
-        if (attachedFile && fs.existsSync(attachedFile.path)) {
-          try {
-            fs.unlinkSync(attachedFile.path);
-            console.log(`Arquivo temporário removido: ${attachedFile.path}`);
-          } catch (unlinkError) {
-            console.error(
-              `Erro ao remover arquivo temporário ${attachedFile.path}:`,
-              unlinkError
-            );
-          }
+        // CORREÇÃO: Itera sobre attachedFiles para remover TODOS os arquivos temporários,
+        // garantindo que não fiquem lixos no diretório 'uploads'.
+        if (
+          attachedFiles &&
+          attachedFiles.length > 0 &&
+          fs.existsSync(attachedFiles.path)
+        ) {
+          attachedFiles.forEach((file) => {
+            try {
+              fs.unlinkSync(file.path);
+              console.log(`Arquivo temporário removido: ${file.path}`);
+            } catch (unlinkError) {
+              console.error(
+                `Erro ao remover arquivo temporário ${file.path}:`,
+                unlinkError
+              );
+            }
+          });
         }
       }
     }
@@ -236,6 +291,13 @@ try {
 } catch (error) {
   console.log(`ERRO NO MULTER: ${error}`);
 }
+
+// --- Iniciar o servidor ---
+app.listen(port, () => {
+  console.log(`Servidor backend rodando em http://localhost:${port}`);
+  console.log(`Modo de ambiente: ${process.env.NODE_ENV || "development"}`);
+});
+
 
 // --- Iniciar o servidor ---
 app.listen(port, () => {
