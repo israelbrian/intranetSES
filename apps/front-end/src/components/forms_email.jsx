@@ -127,14 +127,38 @@ const Forms_email = () => {
       try {
         const formDataToSend = new FormData(); // Usar FormData para enviar arquivos
         for (const key in formData) {
+          // 1. Adicionar os campos de texto ao FormData
           formDataToSend.append(key, formData[key]);
         }
         // No caso do arquivo, `formData.file` será um objeto File.
         // O Multer no backend saberá como lidar com ele.
         // Se `formData.file` for null, ele será appended como 'null' string.
         // O backend precisa lidar com isso se o campo for opcional.
+
+        // Supondo que 'formData' contenha os seus dados de texto do formulário (nome, email, etc.)
+        // e que 'selectedFiles' seja um array de objetos File (obtidos de um input type="file" multiple)
+
+        // <input type="file" name="files" multiple>
+        // Quando o usuário seleciona arquivos, eles geralmente vêm como um FileList
+        // Você precisaria converter isso para um Array se for iterar
+
         if (formData.file) {
-          formDataToSend.append("file", formData.file);
+          const selectedFiles = formData.file ? Array.from(formData.file) : []; // Transforma FileList em Array;
+          if (selectedFiles.length > 0) {
+            selectedFiles.forEach((file) => {
+              formDataToSend.append("file", file);
+              console.log(formDataToSend);
+            });
+          } else {
+            console.log("Nenhum arquivo selecionado para upload.");
+          }
+        }
+
+        // Para inspecionar o FormData (você não verá os arquivos diretamente no console.log)
+        // Você pode iterar sobre ele para ver as chaves e valores:
+        console.log("Conteúdo do FormData:");
+        for (let pair of formDataToSend.entries()) {
+          console.log(pair[0] + ": " + pair[1]);
         }
 
         const response = await axios.post(
@@ -150,7 +174,6 @@ const Forms_email = () => {
         // Axios lança um erro para status 4xx/5xx, então `response.data` já é o que você quer no sucesso.
         console.log("Formulário enviado com sucesso!", response.data);
         alert("Sua mensagem foi enviada com sucesso!");
-
         // Resetar formulário
         setFormData({
           fullName: "",
@@ -409,7 +432,7 @@ const Forms_email = () => {
                         : ""
                     }`}
                     id="message"
-                    placeholder="Mensagem"
+                    placeholder="Mensagem - descrição completa e detalhada do problema. Lembre-se de colocar a sua assinatura de e-mail simples."
                     value={formData.message}
                     onChange={handleChange}
                     required
@@ -431,8 +454,7 @@ const Forms_email = () => {
                   </label>
                   <input
                     type="file"
-                    multiple={true}
-                    onEncrypted="multipart/form-data"
+                    multiple
                     className={`form-control ${
                       validated && errors.file
                         ? "is-invalid"
@@ -480,4 +502,3 @@ const Forms_email = () => {
 };
 
 export default Forms_email;
-
