@@ -3,6 +3,12 @@ import { Link } from "react-router-dom";
 import "../App.css";
 import axios from "axios"; // Importa a biblioteca Axios
 
+// Uma biblioteca bastante popular para implementar notificações em aplicações React é o
+// React-Toastify.
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const Forms_email = () => {
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({
@@ -12,7 +18,8 @@ const Forms_email = () => {
     ramal: "",
     subject: "",
     message: "",
-    file: null,
+    // CORREÇÃO: file agora será um array para múltiplos arquivos
+    file: [], // inicializado como array vazio
   });
   const [errors, setErrors] = useState({});
   const [isSending, setIsSending] = useState(false); // Novo estado para controlar o envio
@@ -34,7 +41,8 @@ const Forms_email = () => {
     const { id, value, type, files } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [id]: type === "file" ? files[0] : value,
+      // CORREÇÃO: Se for input de arquivo, armazena TODOS os arquivos em 'files'
+      [id]: type === "file" ? Array.from(files) : value, // Array.from(files) para pegar todos  --- Transforma FileList em Array
     }));
     // Clear individual error when user starts typing again
     if (errors[id]) {
@@ -97,19 +105,22 @@ const Forms_email = () => {
     }
 
     // File validation
-    if (formData.file) {
+    // Validação para múltiplos arquivos
+    if (formData.file && formData.file.length > 0) {
       // Only validate if a file is selected
-      if (!ALLOWED_FILE_TYPES.includes(formData.file.type)) {
-        newErrors.file =
-          "Tipo de arquivo não permitido. Apenas JPG, PNG, PDF, DOC, DOCX, XLS, XLSX, TXT são aceitos.";
-        isValid = false;
-      }
-      if (formData.file.size > MAX_FILE_SIZE) {
-        newErrors.file = `Arquivo muito grande. O tamanho máximo permitido é ${
-          MAX_FILE_SIZE / (1024 * 1024)
-        } MB.`;
-        isValid = false;
-      }
+      formData.file.forEach((file) => {
+        if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+          newErrors.file =
+            "Tipo de arquivo não permitido. Apenas JPG, PNG, PDF, DOC, DOCX, XLS, XLSX, TXT são aceitos.";
+          isValid = false;
+        }
+        if (file.size > MAX_FILE_SIZE) {
+          newErrors.file = `Arquivo muito grande. O tamanho máximo permitido é ${
+            MAX_FILE_SIZE / (1024 * 1024)
+          } MB.`;
+          isValid = false;
+        }
+      });
     }
 
     setErrors(newErrors);
@@ -126,9 +137,15 @@ const Forms_email = () => {
       setIsSending(true); // Indica que o envio está em andamento
       try {
         const formDataToSend = new FormData(); // Usar FormData para enviar arquivos
+
+        // Adicionar campos de texto ao FormData
         for (const key in formData) {
           // 1. Adicionar os campos de texto ao FormData
-          formDataToSend.append(key, formData[key]);
+
+          // Excluir a chave 'files' por enquanto, ela será tratada separadamente
+          if (key !== "file") {
+            formDataToSend.append(key, formData[key]);
+          }
         }
         // No caso do arquivo, `formData.file` será um objeto File.
         // O Multer no backend saberá como lidar com ele.
@@ -142,23 +159,24 @@ const Forms_email = () => {
         // Quando o usuário seleciona arquivos, eles geralmente vêm como um FileList
         // Você precisaria converter isso para um Array se for iterar
 
-        if (formData.file) {
-          const selectedFiles = formData.file ? Array.from(formData.file) : []; // Transforma FileList em Array;
-          if (selectedFiles.length > 0) {
-            selectedFiles.forEach((file) => {
-              formDataToSend.append("file", file);
-              console.log(formDataToSend);
-            });
-          } else {
-            console.log("Nenhum arquivo selecionado para upload.");
-          }
+        // Adicionar múltiplos arquivos ao FormData
+        // O nome do campo "file" (singular) DEVE ser o mesmo que você configurou no Multer no backend:
+        // upload.array("file", 5)
+        if (formData.file && formData.file.length > 0) {
+          formData.file.forEach((file) => {
+            //  Iterar sobre o array de arquivos
+            formDataToSend.append("file", file);
+            console.log(formDataToSend);
+          });
         }
 
         // Para inspecionar o FormData (você não verá os arquivos diretamente no console.log)
         // Você pode iterar sobre ele para ver as chaves e valores:
-        console.log("Conteúdo do FormData:");
+        console.log("Conteúdo do FormData:\n");
         for (let pair of formDataToSend.entries()) {
-          console.log(pair[0] + ": " + pair[1]);
+          console.log(
+            pair[0] + ": " + (pair[1] instanceof File ? pair[1].name : pair[1])
+          ); // Para arquivos, pair[1] será um objeto File, então logar o nome.
         }
 
         const response = await axios.post(
@@ -173,7 +191,16 @@ const Forms_email = () => {
 
         // Axios lança um erro para status 4xx/5xx, então `response.data` já é o que você quer no sucesso.
         console.log("Formulário enviado com sucesso!", response.data);
-        alert("Sua mensagem foi enviada com sucesso!");
+        // alert("Sua mensagem foi enviada com sucesso!");
+        toast.success("Sua mensagem foi enviada com sucesso!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
         // Resetar formulário
         setFormData({
           fullName: "",
@@ -182,8 +209,12 @@ const Forms_email = () => {
           ramal: "",
           subject: "",
           message: "",
-          file: null,
+          files: [],
         });
+        const fileInput = document.getElementById("file");
+        if (fileInput) {
+          fileInput.value = "";
+        }
         setErrors({});
         setValidated(false);
       } catch (error) {
@@ -192,27 +223,71 @@ const Forms_email = () => {
         if (error.response) {
           // Erro de resposta do servidor (status 4xx ou 5xx)
           console.error("Dados do erro do servidor:", error.response.data);
-          alert(
+          // alert(
+          //   `Ocorreu um erro ao enviar sua mensagem: ${
+          //     error.response.data.message || "Erro desconhecido do servidor."
+          //   }`
+          // );
+          toast.error(
             `Ocorreu um erro ao enviar sua mensagem: ${
               error.response.data.message || "Erro desconhecido do servidor."
-            }`
+            }`,
+            {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            }
           );
         } else if (error.request) {
           // A requisição foi feita, mas nenhuma resposta foi recebida
           console.error("Erro de requisição (sem resposta):", error.request);
-          alert(
-            "Não foi possível conectar ao servidor. Verifique sua conexão ou tente novamente mais tarde."
+          // alert(
+          //   "Não foi possível conectar ao servidor. Verifique sua conexão ou tente novamente mais tarde."
+          // );
+          toast.error(
+            "Não foi possível conectar ao servidor. Verifique sua conexão ou tente novamente mais tarde.",
+            {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            }
           );
         } else {
           // Algo aconteceu na configuração da requisição que disparou um erro
           console.error("Erro de configuração Axios:", error.message);
-          alert(`Ocorreu um erro inesperado: ${error.message}`);
+          // alert(`Ocorreu um erro inesperado: ${error.message}`);
+          toast.error(`Ocorreu um erro inesperado: ${error.message}`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
         }
       } finally {
         setIsSending(false); // Finaliza o estado de envio
       }
     } else {
       console.log("Formulário contém erros de validação.");
+      toast.error(`Formulário contém erros de validação.`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       // Adicionado foco automático no primeiro campo inválido
       const firstInvalidField = document.querySelector(".is-invalid");
       if (firstInvalidField) {
@@ -236,7 +311,7 @@ const Forms_email = () => {
           <div className="col-md-6">
             <Link to="/vpn" className="text-decoration-none">
               <div className="link-content mt-3">
-                <img src="src/img/logo-ses.png" alt="image" className="mt-5" />
+                <img src="/src/img/logo-ses.png" alt="image" className="mt-5" />
               </div>
             </Link>
           </div>
@@ -460,14 +535,18 @@ const Forms_email = () => {
                         ? "is-invalid"
                         : validated &&
                           !errors.file &&
-                          formData.file &&
-                          ALLOWED_FILE_TYPES.includes(formData.file.type) &&
-                          formData.file.size <= MAX_FILE_SIZE
+                          formData.file.length > 0 && // Verificação para múltiplos arquivos
+                          // Validação para cada arquivo na lista
+                          formData.file.every(
+                            (f) =>
+                              ALLOWED_FILE_TYPES.includes(f.type) &&
+                              f.size <= MAX_FILE_SIZE
+                          )
                         ? "is-valid"
                         : ""
                     }`}
-                    id="file"
-                    name="file"
+                    id="file" // ID 'file' para corresponder ao name="file" no backend
+                    name="file" // Nome 'file' para corresponder ao 'upload.array("file", 5)' no backend com o Multer
                     aria-label="file example"
                     onChange={handleChange}
                   />
@@ -476,11 +555,12 @@ const Forms_email = () => {
                   ) : (
                     validated &&
                     !errors.file &&
-                    formData.file &&
-                    ALLOWED_FILE_TYPES.includes(formData.file.type) &&
-                    formData.file.size <= MAX_FILE_SIZE && (
-                      <div className="valid-feedback">Arquivo válido!</div>
-                    )
+                    formData.file.length > 0 &&
+                    formData.file.every(
+                      (f) =>
+                        ALLOWED_FILE_TYPES.includes(f.type) &&
+                        f.size <= MAX_FILE_SIZE
+                    ) && <div className="valid-feedback">Arquivo válido!</div>
                   )}
                 </div>
                 <div className="col-12">
@@ -497,8 +577,45 @@ const Forms_email = () => {
           </div>
         </div>
       </section>
+      {/* Container para as notificações Toastify */}
+      <ToastContainer />
     </>
   );
 };
 
 export default Forms_email;
+
+// Obs.: Antes: file: null e type === "file" ? files[0] : value. Isso só pegava o primeiro arquivo.
+// O estado foi mudado para files: [] (um array vazio) e no handleChange, quando type === "file", agora é Array.from(files).
+// Isso garante que todos os arquivos selecionados pelo usuário sejam armazenados no estado formData.files.
+
+// O id do input de arquivo é "file" e o name também é "file". No backend (server.js), o Multer está configurado com upload.array("file", 5).
+// Essa correspondência é crucial para que o Multer receba os arquivos corretamente em req.files
+
+// Validação de Arquivos (Múltiplos):
+// - O arquivo deve ser válido (ALLOWED_FILE_TYPES.includes(f.type) && f.size <= MAX_FILE_SIZE) para que o formulário seja válido.
+// - O arquivo deve ser válido (f.type === "image/jpeg" && f.size <= 1024 * 1024 * 5) // 5MB
+
+// Antes: A validação (if (formData.file)) verificava apenas o formData.file, que era um único objeto (ou null).
+
+// Depois: A validação agora itera sobre formData.files usando forEach e every para garantir que todos os arquivos selecionados (se houver) estejam dentro dos ALLOWED_FILE_TYPES e MAX_FILE_SIZE.
+// Se qualquer arquivo falhar na validação, um erro é registrado.
+
+// Construção do FormData para Envio:
+
+// Antes: O loop for (const key in formData) incluía formData.file sem tratamento específico para múltiplos arquivos, o que poderia enviar [Object File] como string ou apenas o primeiro arquivo
+// Depois: Agora, o loop for (const key in formData) exclui a chave files inicialmente.
+// Em seguida, um novo loop if (formData.files && formData.files.length > 0) itera sobre formData.files e
+// usa formDataToSend.append("file", file) para adicionar cada arquivo individualmente com a chave "file" ao FormData.
+// Isso é o que o Multer espera para upload.array("file", 5).
+
+// Substituição dos alerts por toasts:
+// Todas as chamadas alert("Sua mensagem foi enviada com sucesso!"); e alert("Erro ao enviar formulário!"); e as mensagens de erro detalhadas
+// foram substituídas por chamadas diretas a toast.success(), toast.error().
+
+// Limpeza do Input de Arquivo após Envio:
+// Adicionei fileInput.value = ""; após o sucesso do envio. Isso é necessário porque o React não zera automaticamente o valor de inputs de type="file".
+
+// ToastContainer no JSX:
+// Confirmei que ToastContainer está presente no seu JSX, o que é essencial para que as notificações sejam renderizadas na tela.
+// Ele é o componente que "segura" e exibe os toasts.
