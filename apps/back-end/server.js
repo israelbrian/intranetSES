@@ -9,8 +9,11 @@ const fs = require("fs"); // Para manipular arquivos
 
 const app = express();
 const port = process.env.PORT || 5000;
-// --- Verificação de Variáveis de Ambiente Essenciais ---
+
+// --- Verificação de Variáveis de Ambiente Essenciais (CRÍTICO!) ---
+// Garante que todas as variáveis de ambiente necessárias estejam configuradas.
 // É CRÍTICO que estas variáveis estejam configuradas corretamente no seu arquivo .env
+// Se alguma estiver faltando, o servidor não inicia para evitar erros em tempo de execução.
 if (
   !process.env.EMAIL_HOST ||
   !process.env.EMAIL_PORT ||
@@ -26,10 +29,11 @@ if (
   console.error(
     "Verifique: EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS, TARGET_EMAIL"
   );
+  // Logar as variáveis para depuração (remova em produção se for sensível)
   console.log(process.env.EMAIL_HOST);
   console.log(process.env.EMAIL_PORT);
   console.log(process.env.EMAIL_USER);
-  console.log(process.env.EMAIL_PASS);
+  // console.log(process.env.EMAIL_PASS); // Remova em produção
   console.log(process.env.TARGET_EMAIL);
   console.log(process.env.FRONTEND_URL);
   console.log(process.env.PORT);
@@ -37,6 +41,10 @@ if (
 }
 
 // Configuração do CORS para permitir requisições do seu frontend React
+
+// --- Configuração do CORS ---
+// Permite requisições apenas da URL do seu frontend React definida em FRONTEND_URL.
+
 app.use(
   cors({
     origin: process.env.FRONTEND_URL, // **AJUSTE PARA A URL DO SEU APLICATIVO REACT EM PRODUÇÃO**
@@ -46,25 +54,28 @@ app.use(
 );
 
 // Middleware para parsing de JSON (se você fosse enviar JSON do frontend)
+// Necessário se o seu frontend enviar dados JSON no corpo da requisição (além dos arquivos).
 app.use(express.json());
 
 // --- Configuração do Multer para upload de arquivos ---
 const uploadsDir = path.join(__dirname, "uploads"); // Define o caminho absoluto para 'uploads'
 
-// Garante que o diretório 'uploads' exista
+// Garante que o diretório 'uploads' exista. Se não, ele será criado.
 if (!fs.existsSync(uploadsDir)) {
   console.log(`Criando diretório de uploads: ${uploadsDir}`);
   fs.mkdirSync(uploadsDir, { recursive: true }); // recursive: true cria pastas aninhadas se necessário
 }
 
 // Configuração do Multer para upload de arquivos
-// CUIDADO: Este é um exemplo simples. Em produção, você pode querer armazenar arquivos em um serviço de nuvem (S3, GCS)
+// Este é um exemplo simples. Em produção, você pode querer armazenar arquivos em um serviço de nuvem (S3, GCS)
+// Configuração principal do Multer
 try {
   const upload = multer({
-    dest: uploadsDir, // Usa o caminho absoluto // Diretório temporário para armazenar arquivos
-    limits: { fileSize: 5 * 1024 * 1024 }, // Limite de 5MB // Limite de 5MB, igual ao frontend
+    dest: uploadsDir, // Usa o caminho absoluto // Diretório temporário para armazenar arquivos ----->   // Diretório onde os arquivos temporários serão armazenados
+    limits: { fileSize: 5 * 1024 * 1024 }, // Limite de 5MB // Limite de 5MB, igual ao frontend ------->    // Limite de 5MB por arquivo (individualmente)
     fileFilter: (req, file, cb) => {
       // Validação de tipo de arquivo no backend (CRÍTICO!)
+      // Validação de tipo de arquivo (CRÍTICO para segurança!)
       const allowedMimeTypes = [
         "image/jpeg",
         "image/png",
@@ -109,7 +120,7 @@ try {
   // --- Rota para o envio de e-mail ---
   app.post(
     "/send-email",
-    upload.array("file", 5), // deve ser "file" se for esse nome no front-end <input type="file" name="file" multiple /> // <--- ALTERADO AQUI: 'files' é o nome do campo no seu frontend, 5 é o limite de arquivos
+    upload.array("file", 5), // deve ser "file" se for esse nome no front-end <input type="file" name="file" multiple /> // <--- ALTERADO AQUI: 'file' é o nome do campo no seu frontend, 5 é o limite de arquivos
     // nome deve coincidir
     // Lembre-se: o nome do campo aqui ("file") DEVE coincidir com o atributo 'name' do seu input de arquivo no frontend.
     async (req, res) => {
@@ -119,9 +130,29 @@ try {
       if (Array.isArray(attachedFiles)) {
         attachedFiles.map((item) => console.log(item));
       }
+      // --- ADICIONE ESTA LINHA PARA DEPURAR ---     // LOG DE VERIFICAÇÃO PARA DEBUG
+
+      // --- IMPORTANTE PARA DEPURAR ---
+      // Este log mostrará o array de arquivos recebidos.
+      // Se nenhum arquivo foi enviado ou o nome do campo não coincide, será um array vazio: []
+
+      console.log("Arquivos recebidos do frontend:", attachedFiles);
       console.log(attachedFiles);
+
+      console.log("Número de arquivos:", attachedFiles.length);
+
+      // Esta é a forma correta de verificar se há arquivos para processar.
+      if (attachedFiles.length > 0) {
+        console.log("Há arquivos para processar!");
+        // O map para console.log é bom para inspecionar os detalhes de cada arquivo.
+        attachedFiles.map((item) => console.log(item));
+      } else {
+        console.log("Nenhum arquivo recebido ou o nome do campo não coincide.");
+      }
+
       // --- Validação de dados (REPETIR VALIDAÇÕES DO FRONTEND AQUI É CRÍTICO PARA SEGURANÇA) ---
       const validationErrors = {};
+      // --- Validação de Dados do Formulário (CRÍTICO para segurança e integridade) ---
 
       if (!fullName || !fullName.trim())
         validationErrors.fullName = "Nome completo é obrigatório.";
@@ -137,6 +168,7 @@ try {
       if (!message || !message.trim())
         validationErrors.message = "Mensagem é obrigatória.";
 
+      // Se houver erros de validação, responde com 400 e remove arquivos temporários.
       if (Object.keys(validationErrors).length > 0) {
         console.error("Erro de validação no backend:", validationErrors);
         if (attachedFiles && fs.existsSync(attachedFiles.path)) {
@@ -155,11 +187,22 @@ try {
         });
       }
 
+      // --- Configuração da Assinatura HTML e Imagem Inline ---
+      // Caminho para a imagem da sua assinatura (ajuste se necessário)
+      // Certifique-se de que o arquivo 'logo_assinatura.png' exista nesta pasta (ex: backend/assets/)
+      const signatureImagePath = path.join(
+        __dirname,
+        "assets",
+        "logo_assinatura.png"
+      );
+      const signatureImageCid = "signature_logo@yourdomain.com"; // ID único para a imagem inline
+
       // --- Construção do corpo do e-mail ---
       const mailOptions = {
-        from: email, // O remetente do e-mail (pode ser o seu e-mail do servidor)
+        from: process.env.EMAIL_USER, // O remetente do e-mail (pode ser o seu e-mail do servidor)
         to: process.env.TARGET_EMAIL, // O e-mail setorial da SES
         replyTo: email, // Permite responder diretamente ao e-mail do remetente do formulário
+        cc: email, // E-mail para ser copiado
         subject: `Contato TI SES - ${subject}`,
         html: `
       <h2>Nova Mensagem do Formulário de Contato</h2>
@@ -186,14 +229,18 @@ try {
         <tr>
           <td style="padding-top: 10px;">
             <a href="https://www.saude.mg.gov.br/" style="margin-right: 10px;">
-              <img src="https://th.bing.com/th/id/OIP.wWimqECAVD5y34hl6Ouj7gHaC6?w=344&h=137&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" alt="logo_SES" width="250" style="vertical-align: middle; margin-top: 20px;">
+              ${
+                fs.existsSync(signatureImagePath)
+                  ? `<img src="cid:${signatureImageCid}" alt="Logo da Empresa" width="250" style="vertical-align: middle; margin-top: 20px;">`
+                  : `<img src="https://th.bing.com/th/id/OIP.wWimqECAVD5y34hl6Ouj7gHaC6?w=344&h=137&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" alt="logo_SES" width="250" style="vertical-align: middle; margin-top: 20px;">`
+              }>
             </a>
           </td>
         </tr>
       </table>
       <p><strong>Anexos:</strong></p>
       ${
-        attachedFiles && attachedFiles.length > 0
+        attachedFiles && attachedFiles.length > 0 // Lista os nomes e tamanhos dos arquivos anexados no corpo do e-mail
           ? `<ul>${attachedFiles
               .map(
                 (file) =>
@@ -211,13 +258,38 @@ try {
 
       // Anexar arquivos se existir // <--- ALTERADO AQUI: Anexar múltiplos arquivos se existirem ---
       // Anexar múltiplos arquivos se existirem
+
+      // --- Anexar Múltiplos Arquivos do Frontend ---
+      // Cria o array de anexos para o Nodemailer.
+
+      // Sempre inicializar mailOptions.attachments como um array vazio
+      mailOptions.attachments = [];
+
+      // Anexar Múltiplos Arquivos do Frontend
       if (attachedFiles && attachedFiles.length > 0) {
-        mailOptions.attachments = attachedFiles.map((file) => ({
-          filename: file.originalname,
-          path: file.path, // Caminho temporário do arquivo
-        }));
+        attachedFiles.forEach((file) => {
+          mailOptions.attachments.push({
+            filename: file.originalname, // Nome original do arquivo
+            path: file.path, // Caminho temporário do arquivo no servidor
+          });
+        });
       }
 
+      // --- Adicionar a Imagem da Assinatura como Anexo Inline (CID) ---
+      // A imagem deve ser um arquivo local no seu servidor.
+      if (fs.existsSync(signatureImagePath)) {
+        mailOptions.attachments.push({
+          filename: "logo_assinatura.png", // Nome do arquivo para referência interna
+          path: signatureImagePath, // Caminho completo para a imagem no seu servidor
+          cid: signatureImageCid, // O Content-ID que você usará na tag <img> do HTML
+        });
+      } else {
+        console.warn(
+          `Aviso: Imagem da assinatura não encontrada em ${signatureImagePath}. A assinatura no e-mail pode não exibir a imagem.`
+        );
+      }
+
+      // --- Envio do E-mail ---
       try {
         // --- Testar conexão SMTP antes de enviar (opcional, mas robusto) ---
         await transporter.verify();
@@ -233,18 +305,20 @@ try {
           senderEmail: email,
           subject: subject,
           messageId: info.messageId,
-          fileName: attachedFiles
+          fileNames: attachedFiles
             ? attachedFiles.map((f) => f.originalname)
-            : ["N/A"], // <--- ALTERADO AQUI
+            : ["N/A"], // <--- ALTERADO AQUI ----> // Lista os nomes dos arquivos enviados
         };
         console.log("LOG [SUCESSO]:", logEntry);
         // Em um sistema real, você salvaria isso em um banco de dados ou serviço de log externo.
 
+        // Responde ao frontend com sucesso e encerra a requisição.
         res.status(200).json({
           message: "E-mail enviado com sucesso!",
           messageId: info.messageId,
         });
       } catch (error) {
+        // --- Tratamento de Erros no Envio do E-mail ---
         console.error("Erro ao enviar e-mail:", error); // Log detalhado do erro
         // Sistema de Logs para erros
         const errorLogEntry = {
@@ -258,6 +332,8 @@ try {
         };
         console.error("LOG [ERRO]:", errorLogEntry);
 
+        // Responde ao frontend com erro e encerra a requisição.
+        // Evita expor detalhes sensíveis do erro em produção.
         res.status(500).json({
           message:
             "Erro interno do servidor ao enviar o e-mail. Tente novamente mais tarde.",
@@ -266,22 +342,24 @@ try {
         });
       } finally {
         // Remover o arquivo temporário SEMPRE após o processamento (sucesso ou falha)
-        // CORREÇÃO: Itera sobre attachedFiles para remover TODOS os arquivos temporários,
+        // Itera sobre attachedFiles para remover TODOS os arquivos temporários,
         // garantindo que não fiquem lixos no diretório 'uploads'.
-        if (
-          attachedFiles &&
-          attachedFiles.length > 0 &&
-          fs.existsSync(attachedFiles.path)
-        ) {
+
+        // --- Limpeza: Remover TODOS os arquivos temporários SEMPRE ---
+        // Essencial para evitar acúmulo de lixo no servidor.
+
+        if (attachedFiles && attachedFiles.length > 0) {
           attachedFiles.forEach((file) => {
-            try {
-              fs.unlinkSync(file.path);
-              console.log(`Arquivo temporário removido: ${file.path}`);
-            } catch (unlinkError) {
-              console.error(
-                `Erro ao remover arquivo temporário ${file.path}:`,
-                unlinkError
-              );
+            if (fs.existsSync(file.path)) {
+              try {
+                fs.unlinkSync(file.path);
+                console.log(`Arquivo temporário removido: ${file.path}`);
+              } catch (unlinkError) {
+                console.error(
+                  `Erro ao remover arquivo temporário ${file.path}:`,
+                  unlinkError
+                );
+              }
             }
           });
         }
@@ -289,7 +367,8 @@ try {
     }
   );
 } catch (error) {
-  console.log(`ERRO NO MULTER: ${error}`);
+  // Erro na configuração inicial do Multer (ex: problema com o diretório)
+  console.log(`ERRO NA CONFIGURAÇÃO DO MULTER: ${error}`);
 }
 
 // --- Iniciar o servidor ---
@@ -298,9 +377,26 @@ app.listen(port, () => {
   console.log(`Modo de ambiente: ${process.env.NODE_ENV || "development"}`);
 });
 
+// Obs.:
+// Pontos Essenciais:
+// Correspondência name="file" (Frontend) <-> upload.array("file", 5) (Backend):
 
-// --- Iniciar o servidor ---
-app.listen(port, () => {
-  console.log(`Servidor backend rodando em http://localhost:${port}`);
-  console.log(`Modo de ambiente: ${process.env.NODE_ENV || "development"}`);
-});
+// No seu forms_email.jsx, o input type="file" deve ter name="file" e id="file".
+
+// No server.js, a linha upload.array("file", 5) usa "file".
+
+// Isso garante que o Multer reconheça os arquivos enviados pelo seu formulário.
+
+// Diretório de Ativos para Assinatura:
+
+// Crie uma pasta assets na raiz do seu projeto backend (ex: backend_portfolio_ATI_react/assets/).
+
+// Coloque a imagem da sua assinatura (ex: logo_assinatura.png) dentro desta pasta assets.
+
+// O código usa path.join(__dirname, 'assets', 'logo_assinatura.png') para encontrar essa imagem.
+
+// Variáveis de Ambiente (.env):
+
+// Certifique-se de que o arquivo credenciais_email.env (ou .env se você renomear) está na raiz do seu projeto backend
+// e contém todas as variáveis necessárias: EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS, TARGET_EMAIL, FRONTEND_URL, PORT.
+// Sem elas, o servidor não iniciará.
