@@ -123,9 +123,11 @@ const Contato = () => {
         </div>
 
       </section>
+      
       <br />
       <Forms_email />
       <br />
+      
       <section className="container p-5 mt-5 bg-white section-duvidas rounded-3">
         <h1 className="display-6 text-center p-3 text-uppercase">
           ASSINATURA DE E-MAIL CORPORATIVO PADRÃO SES - MG
