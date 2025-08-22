@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import Contato from "./pages/contato.jsx";
 import Fhemig from "./pages/fhemig.jsx";
 import Jabber from "./pages/jabber.jsx";

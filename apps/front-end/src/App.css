@@ -67,6 +67,7 @@ section h1:first-child::before {
 }
 
 .loading {
+    /* display: none; */
     position: fixed;
     width: 100vw;
     height: 100vh;

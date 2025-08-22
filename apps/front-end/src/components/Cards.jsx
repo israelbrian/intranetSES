@@ -67,22 +67,20 @@ const Cards = () => {
         </h1>
         <Swiper
           direction={"horizontal"}
-          slidesPerView={1}
+          slidesPerView={2}
           spaceBetween={30}
           mousewheel={true}
-          pagination={{
-            clickable: true,
-          }}
+          pagination={{ clickable: true, }}
           modules={[Mousewheel, Pagination]}
           className="mySwiper"
         >
           {dataList.items.map((item, index) => (
-            <div className="row">
+            <div className="row justify-content-center">
               {/* <!-- Cards Problemas T.I  --> */}
               <SwiperSlide>
-                <div className="col-md-6" key={index} data-aos="fade-up">
+                <div className="col-md-12" key={index} data-aos="fade-up">
                   <Link to={item.link} class="text-decoration-none">
-                    <div className="link-content">
+                    <div className="link-content mb-5 mt-5">
                       <h3 className="p-2 mt-2 display-6">{item.title}</h3>
                       <img src={item.img} alt="Image" className="img-1" />
                       <p className="lead text-secondary mt-4">
@@ -93,6 +91,7 @@ const Cards = () => {
                   </Link>
                 </div>
               </SwiperSlide>
+
             </div>
           ))}
         </Swiper>
