@@ -2,6 +2,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/footer";
 import "./contato.css";
 import "../App.css";
+
 import { Link } from "react-router-dom";
 import Forms_email from "../components/forms_email";
 import Arcodeao_teams from "../components/arcodeao_teams";
@@ -16,32 +17,33 @@ const Contato = () => {
           Entre em contato conosco
         </h1>
 
-        <div className="row">
-          {/* <!-- Logo SES  --> */}
-          <div className="col-md-6">
-            <Link to="/vpn" className="text-decoration-none">
-              <div className="link-content mt-3">
-                <img src="src/img/logo-ses.png" alt="image" className="mt-5" />
-              </div>
-            </Link>
+        <div className="col-md-6 offset-md-3">
+          <div className="link-content mt-3">
+            <img src="src/img/logo-ses.png" alt="image" className="mt-5" />
           </div>
-          {/* <!-- CO WORKING  --> */}
-          <div className="col-md-6">
+        </div>
+
+        <div className="col-md-6">
             <div className="link-content">
-              {/* <!-- <h3 className="p-2 mt-2 display-6">E-mail equipe TI</h3>
-                        <p className="lead mt-4 text-primary ms-3">suporteti.ca@saude.mg.gov.br</p> --> */}
+              <h3 className="p-2 mt-2 display-6">E-mail equipe TI</h3>
+                <p className="lead fs-3 mt-4 ms-3">suporteti.ca@saude.mg.gov.br</p> 
               <h3 className="p-2 mt-2 display-6">
                 Equipe Técnica / E-mail / Ramal{" "}
               </h3>
-              <small>
-                ChatBot_ATI_SES:{" "}
-                <a
-                  href="https://app.chatvolt.ai/@chat_bot_ti_ses"
-                  target="_blank"
-                >
-                  Clique Aqui!
-                </a>
-              </small>
+            </div>
+        </div>
+
+        {/* <div className="row">
+          
+
+          <div className="col-md-6">
+            <div className="link-content">
+              <h3 className="p-2 mt-2 display-6">E-mail equipe TI</h3>
+                <p className="lead mt-4 text-primary ms-3">suporteti.ca@saude.mg.gov.br</p> 
+              <h3 className="p-2 mt-2 display-6">
+                Equipe Técnica / E-mail / Ramal{" "}
+              </h3>
+              
               <ul className="list-group mt-4">
                 <li className="list-group-item">
                   Alexander Spelta /
@@ -94,17 +96,32 @@ const Contato = () => {
               </ul>
             </div>
           </div>
-          <br />
+
           <div className="col-md-6">
             <div className="link-content">
               <h3 className="p-2 mt-2 display-6">
                 Equipe Técnica Microsoft Teams App
-              </h3>
-              <br />
-              <Arcodeao_teams />
+              </h3> 
             </div>
           </div>
+        </div> */}
+
+        <Arcodeao_teams />
+
+        <div className="row mt-5">
+          <div className="col-md-12">
+            <h3 className="p-2 mt-2 display-6 d-inline ms-5">Ainda tem duvidas? O nosso chatbot pode te ajudar!</h3>
+            <button className="btn btn-primary ms-4">
+              <a
+                href="https://app.chatvolt.ai/@chat_bot_ti_ses"
+                target="_blank"
+              >
+                Clique Aqui!
+              </a>
+            </button>
+          </div>
         </div>
+
       </section>
       <br />
       <Forms_email />

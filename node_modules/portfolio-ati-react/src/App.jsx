@@ -23,7 +23,7 @@ function App() {
     // Simula um carregamento (ex: chamada de API)
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 3000); // 3 segundos
+    }, 1000); // 3 segundos
 
     return () => clearTimeout(timer); // Limpa o timer
   }, []);
