@@ -13,29 +13,38 @@ const Contato = () => {
       <Navbar />
       {/* <!-- INICIO DUVIDAS FREQUENTES --> */}
       <section className="container p-5 mt-5 bg-white section-duvidas rounded-3">
-        <h1 className="display-4 text-center p-3 text-uppercase">
-          Entre em contato conosco
-        </h1>
 
-        <div className="col-md-6 offset-md-3">
+        <div className="row">
+
+        {/* <div className="col-md-12">
           <div className="link-content mt-3">
-            <img src="src/img/logo-ses.png" alt="image" className="mt-5" />
+          <h1 className="display-4 text-center p-3 text-uppercase">
+            Entre em contato conosco
+          </h1>
+            <img src="src/img/logo-ses.png" alt="image" className="mt-5 w-25" />
           </div>
-        </div>
+        </div> */}
 
-        <div className="col-md-6">
-            <div className="link-content">
-              <h3 className="p-2 mt-2 display-6">E-mail equipe TI</h3>
-                <p className="lead fs-3 mt-4 ms-3">suporteti.ca@saude.mg.gov.br</p> 
-              <h3 className="p-2 mt-2 display-6">
-                Equipe Técnica / E-mail / Ramal{" "}
-              </h3>
-            </div>
+          <div className="col-md-7 mt-3">
+              <div className="link-content">
+                <h3 className="p-2 mt-2 display-6">
+                  Equipe Técnica / E-mail / Ramal
+                </h3>
+                <Arcodeao_teams />
+                {/* <h3 className="p-2 mt-2 display-6">E-mail equipe TI</h3>
+                  <p className="lead fs-3 mt-4 ms-3">suporteti.ca@saude.mg.gov.br</p>  */}
+              </div>
+          </div>
+          <div className="col-md-5 mt-3">
+              <div className="link-content">
+                <h3 className="p-2 mt-2 display-6">E-mail do suporte</h3>
+                <p className="lead fs-3 mt-4 ms-3">suporteti.ca@saude.mg.gov.br</p>
+              </div>
+          </div>
         </div>
 
         {/* <div className="row">
           
-
           <div className="col-md-6">
             <div className="link-content">
               <h3 className="p-2 mt-2 display-6">E-mail equipe TI</h3>
@@ -106,7 +115,6 @@ const Contato = () => {
           </div>
         </div> */}
 
-        <Arcodeao_teams />
 
         <div className="row mt-5">
           <div className="col-md-12">
@@ -133,25 +141,30 @@ const Contato = () => {
           ASSINATURA DE E-MAIL CORPORATIVO PADRÃO SES - MG
         </h1>
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-md-10 offset-md-2 ">
             <div className="link-content">
-              <h4 className="p-2 mt-2 display-8 flex justify-content-center align-items-center">
+              <h4 className="lead fs-3 p-2 mt-2 flex justify-content-center align-items-center">
                 Caso não possua uma assinatura de e-mail corporativa da SES -
-                MG. Clique aqui para gerar uma!
+                MG.
               </h4>
+              
+            </div>
+          </div>
+
+          <div className="col-md-5 offset-md-5">
+            <div className="link-content mt-3">
               <a
                 href="http://assinaturaemail.saude.mg.gov.br/"
                 target="_blank"
-                className="btn btn-primary p-2 m-3"
+                className="btn btn-primary p-2 m-3 p-3 text-center rounded-3"
               >
-                Criar Assinatura Digital
+                Clique aqui!
               </a>
-              <br />
             </div>
           </div>
         </div>
       </section>
-      <br />
+      
       <Footer />
     </>
   );
