@@ -1,4 +1,4 @@
-import imgSignature from "../img/usados.jpeg";
+import imgSignature from "../img/assinatura.jpg";
 import imgVPN from "../img/VPN.jpg";
 import imgSigame from "../img/notebook2.jpg";
 import imgOutlook from "../img/outlook.jpg";
