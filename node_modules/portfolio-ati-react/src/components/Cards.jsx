@@ -1,8 +1,9 @@
-import img_1 from "../img/VPN.jpg";
-import img_2 from "../img/outlook.jpg";
-import img_3 from "../img/notebook.jpg";
-import img_4 from "../img/telefone.jpg";
-import img_5 from "../img/notebook.jpg";
+import imgSignature from "../img/usados.jpeg";
+import imgVPN from "../img/VPN.jpg";
+import imgSigame from "../img/notebook2.jpg";
+import imgOutlook from "../img/outlook.jpg";
+import imgNotebook from "../img/notebook.jpg";
+import imgTelphone from "../img/telefone.jpg";
 
 import { Link } from "react-router-dom";
 
@@ -17,39 +18,46 @@ import { Mousewheel, Pagination } from "swiper/modules";
 const dataList = {
   items: [
     {
+      title: "Gerarando assinatura de e-mail",
+      description:
+        "Padronize sua assinatura de e-mail utilizando o 'Gerador de assinatura' e seguindo nosso manual..",
+      link: "vpn",
+      img: imgSignature,
+    },
+    {
       title: "VPN (Acesso Remoto)",
       description:
         "Como solicitar o acesso a VPN? Erros frequentes, Manual e Planilha de solicitação...",
       link: "vpn",
-      img: img_1,
+      img: imgVPN,
     },
     {
       title: "Erro ao logar no Outlook",
       description:
         "Meu outlook não abre como proceder? Possiveis alternativas para resolver esse erro...",
       link: "outlook",
-      img: img_2,
+      img: imgOutlook,
     },
     {
       title: "Co-Working FHEMIG",
       description:
         "Com o fechamento do prédio da cidade administrativa temos a possibilidade de trabalhar presencialmente no prédio da Fhemig ...",
       link: "fhemig",
-      img: img_3,
+      img: imgNotebook,
     },
     {
       title: "JABBER",
       description:
         "Bom, com a situação atual do prédio todos os servidores foram alocados em teletrabalho e com isso vem a utilização do Jabber ...",
       link: "jabber",
-      img: img_4,
+      img: imgTelphone,
     },
     {
       title: "Siga-me",
       description:
         "O sistema 'SIGA-ME' é uma funcionalidade liberada pela PRODEMGE, para o uso enquanto durar a interdição dos Prédios Minas e Gerais ...",
       link: "siga_me",
-      img: img_5,
+      img: imgSigame,
     },
   ],
 };
