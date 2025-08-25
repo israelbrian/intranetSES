@@ -309,11 +309,11 @@ const Forms_email = () => {
         <div className="row">
           {/* */}
           <div className="col-md-6">
-            <Link to="/vpn" className="text-decoration-none">
+            {/* <Link to="/vpn" className="text-decoration-none">
+            </Link> */}
               <div className="link-content mt-3">
                 <img src="/src/img/logo-ses.png" alt="image" className="mt-5" />
               </div>
-            </Link>
           </div>
           {/* */}
           <div className="col-md-6">
