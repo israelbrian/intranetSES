@@ -28,7 +28,7 @@ const Contato = () => {
           <div className="col-md-7 mt-3">
               <div className="link-content">
                 <h3 className="p-2 mt-2 display-6">
-                  Equipe Técnica / E-mail / Ramal
+                  E-mail / Ramal equipe T.I
                 </h3>
                 <Arcodeao_teams />
                 {/* <h3 className="p-2 mt-2 display-6">E-mail equipe TI</h3>

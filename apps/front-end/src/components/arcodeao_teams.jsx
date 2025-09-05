@@ -4,7 +4,8 @@ const Arcodeao_teams = () => {
   return (
     <>
       <div class="accordion accordion-flush" id="accordionFlushExample">
-        <div class="accordion-item">
+
+        {/* <div class="accordion-item">
           <h2 class="accordion-header">
             <button
               class="accordion-button collapsed"
@@ -23,39 +24,20 @@ const Arcodeao_teams = () => {
             data-bs-parent="#accordionFlushExample"
           >
             <div class="accordion-body">
-              Placeholder content for this accordion, which is intended to
-              demonstrate the...
-              <br />
-              Contatos Teams: <a href="">alexander.spelta@saude.mg.gov.br</a>
+              <div className="list-group">
+                <div className="list-group-item">
+                  <span>(31) 3916-0031</span>
+                </div>
+                <div className="list-group-item">
+                  <a href="mailto:edinei.araujo@saude.mg.gov.br">
+                    edinei.araujo@saude.mg.gov.br
+                  </a>
+                </div> 
+              </div>
             </div>
           </div>
-        </div>
-        <div class="accordion-item">
-          <h2 class="accordion-header">
-            <button
-              class="accordion-button collapsed"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#flush-collapseTwo"
-              aria-expanded="false"
-              aria-controls="flush-collapseTwo"
-            >
-              Edinei Goncalves Araujo
-            </button>
-          </h2>
-          <div
-            id="flush-collapseTwo"
-            class="accordion-collapse collapse"
-            data-bs-parent="#accordionFlushExample"
-          >
-            <div class="accordion-body">
-              Placeholder content for this accordion, which is intended to
-              demonstrate the...
-              <br />
-              Contatos Teams: <a href="">edinei.araujo@saude.mg.gov.br</a>
-            </div>
-          </div>
-        </div>
+        </div> */}
+
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button
@@ -75,13 +57,55 @@ const Arcodeao_teams = () => {
             data-bs-parent="#accordionFlushExample"
           >
             <div class="accordion-body">
-              Placeholder content for this accordion, which is intended to
-              demonstrate the...
-              <br />
-              Contatos Teams: <a href="">wesley.fernandes@saude.mg.gov</a>
+              <div className="list-group">
+                <div className="list-group-item">
+                  <a href="mailto:edinei.araujo@saude.mg.gov.br">
+                    wesley.fernandes@saude.mg.gov
+                  </a>
+                </div> 
+                <div className="list-group-item">
+                  <span>(31) 3916-0817</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#flush-collapseTwo"
+              aria-expanded="false"
+              aria-controls="flush-collapseTwo"
+            >
+              Edinei Goncalves Araujo
+            </button>
+          </h2>
+          <div
+            id="flush-collapseTwo"
+            class="accordion-collapse collapse"
+            data-bs-parent="#accordionFlushExample"
+          >
+            <div class="accordion-body">
+              <div className="list-group">
+                <div className="list-group-item">
+                  <a href="mailto:edinei.araujo@saude.mg.gov.br">
+                    edinei.araujo@saude.mg.gov.br
+                  </a>
+                </div> 
+                <div className="list-group-item">
+                  <span>(31) 3916-0031</span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+        
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button
@@ -101,13 +125,20 @@ const Arcodeao_teams = () => {
             data-bs-parent="#accordionFlushExample"
           >
             <div class="accordion-body">
-              Placeholder content for this accordion, which is intended to
-              demonstrate the...
-              <br />
-              Contatos Teams: <a href="">pedro.nascimento@saude.mg.gov</a>
+              <div className="list-group">
+                <div className="list-group-item">
+                  <a href="mailto:edinei.araujo@saude.mg.gov.br">
+                    pedro.nascimento@saude.mg.gov
+                  </a>
+                </div> 
+                <div className="list-group-item">
+                  <span>(31) 3916-0817</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button
@@ -127,13 +158,20 @@ const Arcodeao_teams = () => {
             data-bs-parent="#accordionFlushExample"
           >
             <div class="accordion-body">
-              Placeholder content for this accordion, which is intended to
-              demonstrate the...
-              <br />
-              Contatos Teams: <a href="">israel.goncalves@saude.mg.gov</a>
+              <div className="list-group">
+                <div className="list-group-item">
+                  <a href="mailto:edinei.araujo@saude.mg.gov.br">
+                    israel.goncalves@saude.mg.gov
+                  </a>
+                </div> 
+                <div className="list-group-item">
+                  <span>(31) 3916-0031</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button
@@ -153,13 +191,20 @@ const Arcodeao_teams = () => {
             data-bs-parent="#accordionFlushExample"
           >
             <div class="accordion-body">
-              Placeholder content for this accordion, which is intended to
-              demonstrate the...
-              <br />
-              Contatos Teams: <a href="">joao.soares@saude.mg.gov.br</a>
+              <div className="list-group">
+                <div className="list-group-item">
+                  <a href="mailto:edinei.araujo@saude.mg.gov.br">
+                    joao.soares@saude.mg.gov.br
+                  </a>
+                </div> 
+                <div className="list-group-item">
+                  <span>(31) 3916-0031</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+        
       </div>
     </>
   );
