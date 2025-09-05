@@ -1,0 +1,40 @@
+.logo-header {
+    width: 60px;
+}
+
+/* 
+.menu .nav-item .nav-link:hover {
+    color: #fdfb7d;
+
+} */
+.bg-white {
+    background: #fff;
+}
+
+.img-1 {
+    width: 600px;
+    border-radius: 5px;
+}
+
+.section-duvidas h3 {
+    color: #000;
+}
+
+/* a:hover .link-content {
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+a:hover img {
+    width: 580px;
+} */
+ 
+/* a:hover .link-content h3 {
+    color: #ccc;
+} */
+
+/* footer {
+    background: #0d6efd;
+
+} */
