@@ -21,7 +21,7 @@ const dataList = {
       title: "Gerarando assinatura de e-mail",
       description:
         "Padronize sua assinatura de e-mail utilizando o 'Gerador de assinatura' e seguindo nosso manual..",
-      link: "vpn",
+      link: "SignatureGenerator",
       img: imgSignature,
     },
     {
