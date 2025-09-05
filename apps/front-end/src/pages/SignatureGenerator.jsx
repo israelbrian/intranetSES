@@ -85,7 +85,7 @@ const SignatureGenerator = () => {
                   className="p-4 d-flex justify-content-between align-items-center"
                   data-aos="fade-up"
                 >
-                  <img src={icon_signature} classNameName="img-fluid icon-word" />
+                  <img src={icon_signature} className="img-fluid icon-word" />
                   <a
                     href="https://saudemg.sharepoint.com/:x:/r/sites/ATI/_layouts/15/Doc.aspx?sourcedoc=%7B37747BAF-7D05-436E-8D67-0A57803A969C%7D&file=Planilha_Solicita%C3%A7%C3%A3o_de_acesso_VPN.xlsx&action=default&mobileredirect=true"
                     className="text-decoration-none"
