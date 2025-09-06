@@ -1,6 +1,6 @@
 import React from "react";
 
-const Arcodeao_teams = () => {
+const ArcodeaoTeams = () => {
   return (
     <>
       <div class="accordion accordion-flush" id="accordionFlushExample">
@@ -165,4 +165,4 @@ const Arcodeao_teams = () => {
   );
 };
 
-export default Arcodeao_teams;
+export default ArcodeaoTeams;

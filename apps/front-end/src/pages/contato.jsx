@@ -4,8 +4,8 @@ import "./contato.css";
 import "../App.css";
 
 import { Link } from "react-router-dom";
-import Forms_email from "../components/forms_email";
-import Arcodeao_teams from "../components/arcodeao_teams";
+import FormsEmailServerless from "../components/FormsEmailServerless";
+import ArcodeaoTeams from "../components/ArcodeaoTeams";
 
 const Contato = () => {
   return (
@@ -30,7 +30,7 @@ const Contato = () => {
                 <h3 className="p-2 mt-2 display-6">
                   Equipe Técnica / E-mail / Ramal
                 </h3>
-                <Arcodeao_teams />
+                <ArcodeaoTeams />
                 {/* <h3 className="p-2 mt-2 display-6">E-mail equipe TI</h3>
                   <p className="lead fs-3 mt-4 ms-3">suporteti.ca@saude.mg.gov.br</p>  */}
               </div>
@@ -133,7 +133,7 @@ const Contato = () => {
       </section>
       
       <br />
-      <Forms_email />
+      <FormsEmailServerless />
       <br />
       
       <section className="container p-5 mt-5 bg-white section-duvidas rounded-3">
