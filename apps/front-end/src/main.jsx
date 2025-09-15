@@ -10,6 +10,7 @@ import Jabber from "./pages/jabber.jsx";
 import Outlook from "./pages/outlook.jsx";
 import SigaMe from "./pages/sigaMe";
 import VPN from "./pages/vpn.jsx";
+import SignatureGenerator from "./pages/SignatureGenerator.jsx";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
@@ -21,6 +22,8 @@ createRoot(document.getElementById("root")).render(
       <Route path="/outlook" element={<Outlook />} />
       <Route path="/sigaMe" element={<SigaMe />} />
       <Route path="/vpn" element={<VPN />} />
+      <Route path="/SignatureGenerator" element={<SignatureGenerator />} />
+      <Route path="*" element={<App />} />
     </Routes>
   </BrowserRouter>
 );
