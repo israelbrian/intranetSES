@@ -9,7 +9,7 @@ import axios from "axios"; // Importa a biblioteca Axios
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Forms_email = () => {
+const FormsEmail = () => {
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
@@ -583,7 +583,7 @@ const Forms_email = () => {
   );
 };
 
-export default Forms_email;
+export default FormsEmail;
 
 // Obs.: Antes: file: null e type === "file" ? files[0] : value. Isso só pegava o primeiro arquivo.
 // O estado foi mudado para files: [] (um array vazio) e no handleChange, quando type === "file", agora é Array.from(files).
