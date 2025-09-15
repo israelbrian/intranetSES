@@ -8,7 +8,7 @@ import Contato from "./pages/contato.jsx";
 import Fhemig from "./pages/fhemig.jsx";
 import Jabber from "./pages/jabber.jsx";
 import Outlook from "./pages/outlook.jsx";
-import Siga_me from "./pages/siga_me.jsx";
+import SigaMe from "./pages/sigaMe";
 import VPN from "./pages/vpn.jsx";
 import SignatureGenerator from "./pages/SignatureGenerator.jsx";
 
@@ -20,7 +20,7 @@ createRoot(document.getElementById("root")).render(
       <Route path="/fhemig" element={<Fhemig />} />
       <Route path="/jabber" element={<Jabber />} />
       <Route path="/outlook" element={<Outlook />} />
-      <Route path="/siga_me" element={<Siga_me />} />
+      <Route path="/sigaMe" element={<SigaMe />} />
       <Route path="/vpn" element={<VPN />} />
       <Route path="/SignatureGenerator" element={<SignatureGenerator />} />
       <Route path="*" element={<App />} />

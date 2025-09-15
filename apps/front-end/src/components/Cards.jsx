@@ -56,7 +56,7 @@ const dataList = {
       title: "Siga-me",
       description:
         "O sistema 'SIGA-ME' é uma funcionalidade liberada pela PRODEMGE, para o uso enquanto durar a interdição dos Prédios Minas e Gerais ...",
-      link: "siga_me",
+      link: "sigaMe",
       img: imgSigame,
     },
   ],

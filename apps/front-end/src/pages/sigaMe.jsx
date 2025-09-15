@@ -2,7 +2,7 @@ import React from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/footer";
 
-const Siga_me = () => {
+const sigaMe = () => {
   return (
     <div>
       <Navbar />
@@ -79,4 +79,4 @@ const Siga_me = () => {
   );
 };
 
-export default Siga_me;
+export default sigaMe;

@@ -1,6 +1,6 @@
 import React from "react";
 
-const Guia_solucoes_rapidas_suporteti = () => {
+const GuiaSolucoesRapidasSuporteti = () => {
   return (
     <>
       {/* <!-- INICIO SOLUÇÕES RAPIDAS - SUPORTES SES --> */}
@@ -266,4 +266,4 @@ const Guia_solucoes_rapidas_suporteti = () => {
   );
 };
 
-export default Guia_solucoes_rapidas_suporteti;
+export default GuiaSolucoesRapidasSuporteti;
